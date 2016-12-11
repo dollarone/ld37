@@ -1,0 +1,81 @@
+8.30 wake up! read theme! brainstorm
+breakfast. think. look at twitter, twitch, irc, ludumdare.com
+
+Alright. Man up. It's noon. Let's go.
+
+1pm: I have hardship getting started. atleast wrote some plan now, and started pixeling. but de-touring to AoC
+
+5:30. OK OK. So I wasted time on: eating. coffee. watching twitter/twitch. Having people over. watching football updates. Advent of Code.
+
+BUT! I have a "main character" sprite and I finally implemented map import from tiled. Which is progress! that was kinda #1 on the steps, yay.
+
+Idea:
+
+Barbarian cave
+
+a cave which is one giant room. (ONE ROOM GEDDIT). You enter, and your quest is to find the Amulet of Dollarone which gives you Endless Riches(TM).
+
+The Cave is actually the Room of Peril, a massive room with many perils, including spike traps that reset (must memorize) and walls that crush - and other barbarians. 
+
+once you find the amulet (in the middle of the maze) you have to bring it out, at which point you enter the leaderboards (time spent,  time holding amulet, level etc) and you find that the amulet is reset.
+
+first version is a prototype without perils where the world is determined server-side and the client just sends commands. move to the middle, pick up the amulet and return.
+then add perils
+then add items and powerups (and levels)
+then add multiplayer!
+
+start with a small world, add bigger later
+more items and creatures etc
+
+big ideas: NPCs are replaced with players and players become NPCs after they are immobile for a while (you have been logged out due to inactivity, please try again - or press here to resume?) should be ok as long as the client sends stayalive if browser is open
+
+further work:
+ability to fake death
++1 axe
+"game"changin items like shovel
+different classes...
+
+tips:
+avoid archery
+minimize wait
+make it fun!
+realtime chat - one line per turn ("hey") which just writes the line where you are (replace if new every turn)
+
+music! trubadour? minstrels? lutes. brave sir robin
+
+
+plan: 
+
+DONE make a server thing that holds the map. read map from txt?
+DONE make client display map (does so but loads it... guess its ok.)
+YES make the server accept input from client
+YES make the server send out updates regularly
+AH accept other clietns as view-only
+
+milestone 1: make it possible to move around and grab the amulet and escape. win screen.
+
+lava! push people into it
+and/or empty spaces.
+
+
+
+Ring of Fire :)
+legend of Amulet of Dollarone to the brave barbarian who can brave the Ring of Fire 
+with ring of fire aas extra track
+
+just make it like: http://orig01.deviantart.net/c66f/f/2015/248/a/7/volcano_cave___tileset_test__2_by_phyromatical-d98fgbf.png
+
+one massive room with pathways between lava
+
+tood: still a problem with the door. anyway, move door to top and make it a cave entrance. no need for fog of war because the area you see is small. so: make main window smaller. only send the characters in viewable distance to clients. i mean, ideally the map should come from server, right.
+
+sort out multiplayer. we have ids. make random names
+ring of fire intro song
+
+make it acutally multiplayer
+
+max... 10 people? 20? add UI for wait. load limit on client side
+
+items: display them in client, and store them on server
+death: scatter items, update dead in server, remove from client
+animation when bots are replaced (no)
