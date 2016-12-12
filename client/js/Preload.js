@@ -14,13 +14,11 @@ PlatformerGame.Preload.prototype = {
     this.game.load.spritesheet('logo-tiles', 'assets/images/logo-tiles.png', 17, 16);
     this.game.load.spritesheet('tiles', 'assets/images/tiles.png', 16, 16);
     this.game.load.spritesheet('barbarian', 'assets/images/barbarian1.png', 32, 32);
+    this.game.load.spritesheet('heart', 'assets/images/heart.png', 32, 9);
+    this.game.load.spritesheet('items', 'assets/images/items.png', 32, 32);
     this.load.tilemap('level', 'assets/tilemaps/level.json', null, Phaser.Tilemap.TILED_JSON);
-    this.game.load.image('sky', 'assets/images/sky_new.png');
-    this.game.load.image('star', 'assets/images/star.png');
-    this.game.load.image('gamejam', 'assets/images/onehourgamejamlogo.png');
-
-    this.game.load.audio('splash', 'assets/audio/onehourgamejamsplash.ogg');
-    this.game.load.audio('music', 'assets/audio/music.ogg');
+    this.load.image('glint', 'assets/images/glint.png');
+    //this.game.load.audio('music', 'assets/audio/music.ogg');
 
   },
   create: function() {

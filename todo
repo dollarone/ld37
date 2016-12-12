@@ -52,9 +52,6 @@ YES make the server accept input from client
 YES make the server send out updates regularly
 AH accept other clietns as view-only
 
-milestone 1: make it possible to move around and grab the amulet and escape. win screen.
-
-lava! push people into it
 and/or empty spaces.
 
 
@@ -76,6 +73,59 @@ make it acutally multiplayer
 
 max... 10 people? 20? add UI for wait. load limit on client side
 
+-=--=
+
+
+milestone 1: make it possible to move around and grab the amulet and escape. win screen.
+
+tiles
+animated tiles
+
+map
+
+win screen
+
+death screen
+
+both with replay y/n
+
+leaderboard
+
+startup screen
+
+LD screen
+
+dollar screen
+
+waiting for connection thing
+
+game full thing
+
+intro music
+
+music (2 tracks)
+
+ability to talk
+
+better font
+
+
+do something with dead items
+
+extras:
+miss makes sword vs sword sound. 
+hit = red tint
+
+DONE:
+lava! push people into it
 items: display them in client, and store them on server
 death: scatter items, update dead in server, remove from client
+attack
+pickup items
+sword glint
+mark people as dead
+HUD (life) or just hearts
+3 hearts each. 5/10 chance to hit. -1 with helm, -1 with shield, -2 with armour
++2 sword gets +2 to hit
+ hit: heart dies
 animation when bots are replaced (no)
