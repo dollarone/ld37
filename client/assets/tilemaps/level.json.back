@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="32" tileheight="32" nextobjectid="20">
+ <tileset firstgid="1" name="tiles" tilewidth="32" tileheight="32">
+  <image source="../images/tiles.png" width="320" height="320"/>
+ </tileset>
+ <tileset firstgid="101" name="items" tilewidth="32" tileheight="32">
+  <image source="../images/items.png" width="260" height="32"/>
+ </tileset>
+ <layer name="backgroundLayer" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt1jEOgCAQRFEKaztttZX7H1CslYiRdTbrNyETE6t5LJhSjGcqaw6QS1lrgFT3iAcenlPdIx54eE51j3jg4TnVPeKBh+dU94gHHp5T3SMedh5DEI8xiAfzgQce17ndvB+Z8ZB5vP0Oj/4ulvOAR5uD1f7H47nHl/OAR//7HY++HrV5yOl8j+Bh59FyLtX65/9Kc15xf/zbYwcWrv4k
+  </data>
+ </layer>
+ <layer name="blockedLayer" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzFWVlvFDEMtuhuxdXtLvDCVYmrIAHbwgtXn6D0jdICb0D//8/AFmPV+9VOMp5pa8nKZCbHxMdnJzkmoh/MP5l/MR+beom89pdZ/838h/kv8wnUhebME+Z15ln3vB20v8x6jTa6/39o1rFrvu8xv2c+6srvDWP2IZlfZbhbaVuiOa3qQspt8/0T81Xmu8zXmL8MmMujNVq1gyy9Yn4NvDTfD5hfMt9k/sj8LRjnEfNjU6r+sK6l0pj6mNGpTGRMlMuzbh37DeNMoLS69sYfSx/qH3Y+lMsO8xXmw8o43r97a9oN+g3Vh51P/H0KbVr0cY/5fo/Szq9rHEMfdi2b0CbSB/pAdn61ubHwSuSB8hKK9KF9h9g2zp8lkYfY0hatysPiSqQPtG0Pny4SrzwcmZt6SR+tvm3xyvpfFq88eXg4tWHqqA+Vq7Vt1WnLmqz/ZfHKyllojXz7tH6C+lij1ZzM+kiET9oH58nilZWz1nWcSB473ToOoY/qwcrTi+vvKJZ7Fq9QH1J/zvyCYnmIPsSu9k2fWYWtTe3Tqi/h/Bm88vTxhvktlfVh/aNP7F7v+tm8GufP4JWnjyhuKKE+MrE7iudZvPL0EcUNIbHzp906PlA9PtTihfc/Gbzy8psobmhd5rlBZ+1I/SqKF4rFJTln8cqLHyX9WHnZPaOU6ld98lukMfGqVO/rC7X81vufsfCqVD9vyuIVykf2tcvC9/OmVryKcORJVy66/ogvrfvtofjVilclHGnFHYzRUbsMfrXiVS2XbsGdCTxH7TL41YpXtTz0skqlVrzS9R/RqW1aO/Xid+Ycasj5VS3f1nVoDNsi376tHLxzh5ZzqOz5VWuc8ewb54rid/Ycqk+/SG9I2nfmPE8dOWTtfKh/2P0xnp8RlfWx6cghsvu+8QHPtKL3Fq+8/btSH/yP7B7jTUv88Mbxzrrs3rK0D/LsCZ9b7R7bRfmvjj8NxsnsBzF+2HuCJdXtV/MfnWta6KOl6tDaR7Q/b82vdJ1ql4vunxSvj6hs76gP+2970EfvqrSPdy7j7c/75FetJd4TYlzw7qrknuo6nd5VzZ22Q8/btc0keC7Zu8hH5ejF3K/Mt5hvM99h/ty936Cz8m3Bq5I+huRAausWi6zvij4e0P+7Q9GL6kPPDlvxqs9+cOj9nWKR9Y8D8u8OPX2gH1j/K8V5pGz+g/egSxjXO4tXGU/hHc4t80R4hecESmPlTRb7ZE/pnW0t6Cy24T2kjlWKK56/ZPMfkVcpntuzLZsv1PJaG2tK7ceikh5xfevwrRWvMuclfSmDdUpRXpuJ52PTENyr7Xcu8twsi3tRfpU93x1KQ3DP8xvMWy+KxtovKrXG839L5axC
+  </data>
+ </layer>
+ <objectgroup name="objectLayer">
+  <object id="1" gid="101" x="838.75" y="1370.34" width="19.7955" height="22.1591">
+   <properties>
+    <property name="type" value="amulet"/>
+   </properties>
+  </object>
+  <object id="3" gid="105" x="1418.67" y="1497.05" width="29.3333" height="23.5455">
+   <properties>
+    <property name="type" value="potion1"/>
+   </properties>
+  </object>
+  <object id="4" gid="103" x="1256.03" y="1308.03" width="21.2424" height="22.7576">
+   <properties>
+    <property name="type" value="helm1"/>
+   </properties>
+  </object>
+  <object id="7" gid="104" x="906.659" y="459.553" width="21.7576" height="18.9697">
+   <properties>
+    <property name="type" value="armour1"/>
+   </properties>
+  </object>
+  <object id="8" gid="102" x="1424.3" y="708.023" width="21.3636" height="23.2727">
+   <properties>
+    <property name="type" value="shield1"/>
+   </properties>
+  </object>
+  <object id="10" gid="106" x="10" y="1378.91" width="32" height="32">
+   <properties>
+    <property name="type" value="pineapple"/>
+   </properties>
+  </object>
+  <object id="11" gid="108" x="1513.42" y="122" width="13.5833" height="20">
+   <properties>
+    <property name="type" value="sword"/>
+   </properties>
+  </object>
+  <object id="12" gid="105" x="478" y="1278.71" width="29.3333" height="23.5455">
+   <properties>
+    <property name="type" value="potion2"/>
+   </properties>
+  </object>
+  <object id="13" gid="105" x="896.667" y="791.295" width="29.3333" height="23.5455">
+   <properties>
+    <property name="type" value="potion3"/>
+   </properties>
+  </object>
+  <object id="14" gid="104" x="84.1591" y="1161.55" width="21.7576" height="18.9697">
+   <properties>
+    <property name="type" value="armour2"/>
+   </properties>
+  </object>
+  <object id="15" gid="102" x="79.4697" y="904.523" width="21.3636" height="23.2727">
+   <properties>
+    <property name="type" value="shield2"/>
+   </properties>
+  </object>
+  <object id="16" gid="102" x="1506.8" y="1302.69" width="21.3636" height="23.2727">
+   <properties>
+    <property name="type" value="shield3"/>
+   </properties>
+  </object>
+  <object id="17" gid="102" x="1181.64" y="108.523" width="21.3636" height="23.2727">
+   <properties>
+    <property name="type" value="shield4"/>
+   </properties>
+  </object>
+  <object id="18" gid="103" x="327.364" y="153.689" width="20.0909" height="23.5076">
+   <properties>
+    <property name="type" value="helm2"/>
+   </properties>
+  </object>
+  <object id="19" gid="103" x="98.2803" y="785.364" width="21.2424" height="22.7576">
+   <properties>
+    <property name="type" value="helm3"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="foregroundLayer" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20ON6AAAAAAAAAAAADg3wAnEAAB
+  </data>
+ </layer>
+</map>

@@ -18,12 +18,22 @@ PlatformerGame.Preload.prototype = {
     this.game.load.spritesheet('items', 'assets/images/items.png', 32, 32);
     this.load.tilemap('level', 'assets/tilemaps/level.json', null, Phaser.Tilemap.TILED_JSON);
     this.load.image('glint', 'assets/images/glint.png');
-    //this.game.load.audio('music', 'assets/audio/music.ogg');
+    this.load.image('ludumdare', 'assets/images/ludumdare.png');
+    this.load.image('title', 'assets/images/title.png');
+    this.game.load.audio('dollarone', 'assets/audio/dollarone_dollarone.ogg');
+    this.game.load.audio('swords', 'assets/audio/swords.ogg');
+    this.game.load.audio('ugh1', 'assets/audio/ugh1.ogg');
+    this.game.load.audio('ugh2', 'assets/audio/ugh2.ogg');
+    this.game.load.audio('ugh3', 'assets/audio/ugh3.ogg');
+    this.game.load.audio('aaaargh', 'assets/audio/aaaargh.ogg');
+    //this.game.load.audio('music', 'assets/audio/main_theme.ogg');
+    //this.game.load.audio('title-theme', 'assets/audio/title-theme.ogg');    
+    this.game.load.audio('music', 'assets/audio/both.ogg');    
 
   },
   create: function() {
-    var colour = "eee";
+    var colour = "000";
     var timeout = 2;
-    this.state.start('Game', true, false, colour, timeout);
+    this.state.start('Logo', true, false, colour, timeout);
   }
 };

@@ -22,34 +22,46 @@ PlatformerGame.Game.prototype = {
         this.queuedAction = "";
         
         var msg = JSON.parse(message.data);
-        console.log(msg);
+        //console.log(msg);
         if (undefined != msg.status && msg.status == "registration") {
             this.nick = msg.nick;
         }
+        else if (undefined != msg.status && msg.status == "exit") {
+            this.state.start('Postgame', true, false, msg.player.items);
+        }
+        else if (undefined != msg.status && msg.status == "miss") {
+            this.sfx_swords.play();
+        }
+        else if (undefined != msg.status && msg.status == "hit") {
+            this.play_random_sfx_ugh();
+        }
+        else if (undefined != msg.status && msg.status == "death") {
+            this.sfx_ugh3.play();
+        }
+        else if (undefined != msg.status && msg.status == "death_by_lava") {
+            this.sfx_aaaargh.play();
+        }
         else {
             for (var i = 0; i < 10; i++) {
-                /*if (msg.players[i].nick == this.nick) {
-                    this.player.x = parseInt(msg.players[i].x) * 32;
-                    this.player.y = parseInt(msg.players[i].y) * 32;
-                    this.player.life = parseInt(msg.players[i].life);
-                    this.player.frame = this.calculateBarbarianFrame(parseInt(msg.players[i].items));
+                this.barbarians[i].life = parseInt(msg.players[i].life);
+                this.barbarianHearts[i].frame = 3 - parseInt(msg.players[i].life);
+                if (parseInt(msg.players[i].life) == 0) {
+                    if (msg.players[i].nick == this.nick) {
+                        this.gameOver = true;
+                        this.gameOverText1.visible = true;
+                        this.gameOverText2.visible = true;
+                        this.game.camera.follow(null);
+                    }
                     this.barbarians[i].x = -100;
+                    this.barbarianNames[i].x = -100;
                 }
-                else {*/
-                    this.barbarians[i].life = parseInt(msg.players[i].life);
-                    this.barbarianHearts[i].frame = 3 - parseInt(msg.players[i].life);
-                    if (parseInt(msg.players[i].life) == 0) {
-                        this.barbarians[i].x = -100;
-                        this.barbarianNames[i].x = -100;
-                    }
-                    else {
-                        this.barbarians[i].x = parseInt(msg.players[i].x) * 32;
-                        this.barbarians[i].y = parseInt(msg.players[i].y) * 32;
-                        this.barbarianNames[i].x = parseInt(msg.players[i].x) * 32 + 16;
-                        this.barbarianNames[i].y = parseInt(msg.players[i].y) * 32 - 1;
-                    }
-                    this.barbarians[i].frame = this.calculateBarbarianFrame(parseInt(msg.players[i].items));
-                //}
+                else {
+                    this.barbarians[i].x = parseInt(msg.players[i].x) * 32;
+                    this.barbarians[i].y = parseInt(msg.players[i].y) * 32;
+                    this.barbarianNames[i].x = parseInt(msg.players[i].x) * 32 + 16;
+                    this.barbarianNames[i].y = parseInt(msg.players[i].y) * 32 - 1;
+                }
+                this.barbarians[i].frame = this.calculateBarbarianFrame(parseInt(msg.players[i].items));
 
                 this.barbarianNames[i].text = msg.players[i].nick;
                 this.barbarianNames[i].updateText();
@@ -79,15 +91,16 @@ PlatformerGame.Game.prototype = {
             }
         }
         this.myText.text = 'connected ' + this.nick + '\n' + message.data;
+
     },
 
     displayError: function(err) {
-        console.log('Websocketerror: ' + err);
+        console.log('Websocketerror - probably the server died. Sorry! Error: ' + err);
     },
 
     sendAction : function(action) {
         if (action != this.queuedAction) {
-            if (this.connected) { //} && this.can_send_action) {
+            if (this.connected && !this.gameOver) {
                 this.ws.send(JSON.stringify({action: action}));
                 this.queuedAction = action;
             }
@@ -212,7 +225,7 @@ PlatformerGame.Game.prototype = {
 
         this.map.setCollisionBetween(1, 10000, true, 'blockedLayer');
         this.blockedLayer.resizeWorld();
-
+        this.gameOver = false;
 
         this.barbarians = [];
         this.barbarianNames = [];
@@ -265,9 +278,11 @@ PlatformerGame.Game.prototype = {
         this.items[13].type = "potion2";
         this.items[14].type = "potion3";
  
-        this.music = this.game.add.audio('music');
-        this.music.loop = true;
-        //this.music.play();
+        this.sfx_swords = this.game.add.audio('swords');
+        this.sfx_ugh1 = this.game.add.audio('ugh1');
+        this.sfx_ugh2 = this.game.add.audio('ugh2');
+        this.sfx_ugh3 = this.game.add.audio('ugh3');
+        this.sfx_aaaargh = this.game.add.audio('aaaargh');
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
         
@@ -276,11 +291,23 @@ PlatformerGame.Game.prototype = {
         this.openConnection();
         this.myText = this.game.add.text(32, 32, "started (not yet connected)", { font: "14px Arial", fill: "#ff0044"});
         this.myText.fixedToCamera = true;
+        this.myText.visible = false;
 
-        this.can_send_action = true;
+        this.gameOverText1 = this.game.add.text(87, 47, "Oh no! You have died!\n\n\n\n\n\nPress enter to restart.", { font: "24px Arial", fill: "#ff0044"});
+        this.gameOverText1.fixedToCamera = true;
+        this.gameOverText1.visible = false;
+
+        this.gameOverText2 = this.game.add.text(82, 64, "GAME\nOVER", { font: "84px Arial", fill: "#ff0044"});
+        this.gameOverText2.fixedToCamera = true;
+        this.gameOverText2.visible = false;
+
+        this.enterKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+        this.restarting = false;
+
         this.glint = false;
         this.glintSprite = this.game.add.sprite(-100, 0, 'glint');  
         this.game.add.tween(this.glintSprite).to( { alpha: 0 }, 600, "Linear", true, 0, -1, true);
+        this.foregroundLayer = this.map.createLayer('foregroundLayer');
 
     },
 
@@ -294,6 +321,13 @@ PlatformerGame.Game.prototype = {
             if (this.timer % 200 == 20) {
                 this.glintSprite.visible = false;
             }
+        }
+
+        if (this.gameOver && this.enterKey.isDown && !this.restarting) {
+            this.restarting = true;
+            this.ws.close();
+            this.game.state.restart();
+            
         }
 
         if (this.cursors.left.isDown) {
@@ -310,6 +344,15 @@ PlatformerGame.Game.prototype = {
             this.sendAction("down");
         }
 
+
+    },
+
+    play_random_sfx_ugh: function() {
+        switch (this.game.rnd.integerInRange(0,2)) {
+            case 0: this.sfx_ugh1.play(); break;
+            case 1: this.sfx_ugh2.play(); break;
+            case 2: this.sfx_ugh3.play(); break;
+        }
 
     },
 };

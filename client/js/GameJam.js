@@ -12,13 +12,10 @@ PlatformerGame.GameJam.prototype = {
 
     //Change the background colour
 
-    var yam = this.game.add.sprite(this.game.width/2, this.game.height/2, 'gamejam');
+    var yam = this.game.add.sprite(this.game.width/2, this.game.height/2, 'ludumdare');
     yam.anchor.setTo(0.5);
-    yam.scale.setTo(0.1); //yam.width/this.game.width)
+    yam.scale.setTo(0.5); //yam.width/this.game.width)
     this.game.stage.backgroundColor = this.colour;
-
-    this.splashMusic = this.game.add.audio('splash');
-    this.splashMusic.play();
 
     this.startTime = this.game.time.now; 
 
@@ -30,20 +27,17 @@ PlatformerGame.GameJam.prototype = {
   skip : function() {
     if (!this.pressed) {
         this.pressed = true;
-        this.state.start('Game');
+        this.state.start('MainMenu', true, false, this.colour, this.timeout);
     }
   },
 
   update: function() {
-    if (this.startTime < this.game.time.now - 5000 && !this.pressed) {
+    if (this.startTime < this.game.time.now - 1500 && !this.pressed) {
 
         this.pressed = true;
-        this.state.start('Game');
+        
+        this.state.start('MainMenu', true, false, this.colour, this.timeout);
     }
   },
 
-  createTile : function(x, y, frame) {
-    ledge = this.platforms.create(x, y, 'logo-tiles');
-    ledge.frame = frame;
-  },
 };

@@ -15,9 +15,13 @@ PlatformerGame.Logo.prototype = {
 
     this.platforms = this.game.add.group();
 
-    logo_top_x = 5;
-    logo_top_y = 110;
-    tile_space = 17;
+    this.splashMusic = this.game.add.audio('dollarone');
+    this.splashMusic.play();
+
+
+    logo_top_x = -8;
+    logo_top_y = 100;
+    tile_space = 16;
 
     this.createTile(logo_top_x+tile_space*4, logo_top_y+tile_space*0, 2);
     this.createTile(logo_top_x+tile_space*8, logo_top_y+tile_space*0, 2);
@@ -188,7 +192,7 @@ PlatformerGame.Logo.prototype = {
         this.pressed = true;
         var colour = "333";
         var timeout = 2;
-        this.state.start('GameJam', true, false, this.colour, this.timeout);
+        this.state.start('GameJam', true, false, this.colour, 3);
     }
   },
 
