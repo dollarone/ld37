@@ -5,7 +5,7 @@ PlatformerGame.Game = function(){};
 
 PlatformerGame.Game.prototype = {
     openConnection: function() {
-        this.ws = new WebSocket("ws://localhost:8989");
+        this.ws = new WebSocket("ws://dollarone.games:8989");
         this.connected = false;
         this.ws.onmessage = this.onMessage.bind(this);
         this.ws.onerror = this.displayError.bind(this);
