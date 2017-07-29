@@ -1,39 +1,106 @@
-var WebSocketServer = require('ws').Server
-, wss = new WebSocketServer({port: 8989});
+let WebSocketServer = require('ws').Server, wss = new WebSocketServer({port: 8988})
 
-console.log('Server started on 8989');
-
-
-var players = [];
-players.push({x:2, y:40, nick:"Conan", bot:true, life:3, items:0});
-players.push({x:14, y:33, nick:"Kull", bot:true, life:3, items:0});
-players.push({x:15, y:41, nick:"Thorgrim", bot:true, life:3, items:0});
-players.push({x:17, y:46, nick:"Bombaata", bot:true, life:3, items:0});
-players.push({x:33, y:44, nick:"Togra", bot:true, life:3, items:0});
-
-players.push({x:46, y:29, nick:"Alaric", bot:true, life:2, items:0});
-players.push({x:37, y:22, nick:"Clovic", bot:true, life:3, items:0});
-players.push({x:29, y:8, nick:"Gundahar", bot:true, life:3, items:0});
-players.push({x:16, y:23, nick:"Harald", bot:true, life:2, items:0});
-players.push({x:6, y:10, nick:"Grim", bot:true, life:1, items:0});
-currentPlayer = 0;
-
-var start_x = 4;
-var start_y = 2;
-
-var next_player_id = 0;
-var parsedJSON = require('../client/assets/tilemaps/level.json');
-
-//console.log(parsedJSON.layers[0].data);
-
-var height = 50;
-var width  = 50;
+console.log('Server started on 8988')
 
 
-var z = 0;
+let players = []
+currentPlayer = 0
 
-var map = [width];
+let start_x = 4
+let start_y = 2
 
+let next_player_id = 0
+
+
+// TODO: multiple
+let parsedJSON = require('../client/static/assets/tilemaps/map0.json')
+
+let height = parsedJSON.height
+let width = parsedJSON.width
+
+
+let map = []
+map[0] = {}
+map[0]["map"] = []
+map[0]["robots"] = []
+
+console.log(parsedJSON)
+let x = 0
+let y = 0
+for (let tile in parsedJSON.layers[0].data) {
+    //console.log("tile:" + tile)
+    //if (parsedJSON.layers[0].data[tile] >= 0) {
+        //let sprite = this.game.add.sprite(startX + offset + x*32, startY + y*24, 'tiles')
+        //sprite.frame = parsedJSON.layers[0].data[tile] - 1
+        if (undefined == map[0]["map"][y]) {
+            map[0]["map"][y] = [height]
+        }
+        if (undefined == map[0]["map"][y][x]) {
+            map[0]["map"][y][x] = [width]
+        }
+        map[0]["map"][y][x] = parsedJSON.layers[0].data[tile] - 1
+        //console.log("hey: " + x + "," + y + " : " + map[0]["map"][y][x])
+    //}
+
+    x+=1
+    if (x%width == 0) {
+        y+=1
+        x=0
+    }
+    
+}
+
+let buffer = ""
+for (let y=0; y<height; y++) {
+    for (let x=0; x<width; x++) {
+        if (map[0]["map"][y][x].toString().length < 2) {
+            buffer += " "
+        }
+        buffer += map[0]["map"][y][x] + ", "
+    }
+    buffer += "\n"
+}
+console.log("loaded map:\n" + buffer)
+
+x = 0
+y = 0
+for (let tile in parsedJSON.layers[1].data) {
+//        if (undefined == map[0]["robots"][y]) {
+//            map[0]["robots"][y] = [height]
+//        }
+//        if (undefined == map[0]["robots"][y][x]) {
+//            map[0]["robots"][y][x] = [width]
+//        }
+    if (parsedJSON.layers[1].data[tile] > 0) {
+       map[0]["robots"].push( {y:y, x:x, frame:parsedJSON.layers[1].data[tile] - 1} )
+    }
+
+    x+=1
+    if (x%width == 0) {
+        y+=1
+        x=0
+    }
+
+        //console.log("hey: " + x + "," + y + " : " + map[0]["map"][y][x])
+    //}
+
+}
+/*
+buffer = ""
+for (let y=0; y<height; y++) {
+    for (let x=0; x<width; x++) {
+        if (map[0]["robots"][y][x].toString().length < 2) {
+            buffer += " "
+        }
+        buffer += map[0]["robots"][y][x] + ", "
+    }
+    buffer += "\n"
+}
+console.log("loaded robots:\n" + buffer)
+*/
+let turn = 0
+
+/*
 for(var y=0; y < height; y++) {
     map[y] = [height]
         for(var x=0; x < width; x++) {
@@ -44,27 +111,11 @@ for(var y=0; y < height; y++) {
     }
 }
 
-var items = [];
 
-items.push({type:"amulet",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"helm1",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"helm2",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"helm3",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"shield1",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"shield2",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"shield3",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"shield4",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"armour1",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"armour2",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"sword",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"pineapple",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"potion1",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"potion2",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"potion3",x:-10,y:-10, owner:"", dead:false});
+var robots = [];
 
-
-for (item in parsedJSON.layers[2].objects) {
-    console.log(parsedJSON.layers[2].objects[item]);
+for (robot in parsedJSON.layers[2].objects) {
+    console.log(parsedJSON.layers[2].objects[robot]);
     var type = parsedJSON.layers[2].objects[item].properties.type;
     var x = parseInt(parsedJSON.layers[2].objects[item].x/32);
     var y = parseInt(parsedJSON.layers[2].objects[item].y/32);
@@ -104,164 +155,169 @@ console.log(buffer);
         {
          "data"
 */
-var users = {};
-
+let users = {}
+let games = {}
+let gameNumber = 0
+let earliestOnGoingGame = 0
 
 wss.on('connection', function(ws) {
 
-    
-    console.log('connected: ' + ws.upgradeReq.headers['sec-websocket-key']);
-    var user = ws.upgradeReq.headers['sec-websocket-key'];
+    console.log('connected: ' + ws.upgradeReq.headers['sec-websocket-key'])
+    var user = ws.upgradeReq.headers['sec-websocket-key']
+//    console.log('connected: ' + ws.upgradeReq.headers['sec-websocket-key']);
     if (user in users) {
-        console.log("user already registered?");
+        console.log("user already registered?")
     }
     else {
-        
-        var nick = generateNick(user);
+        users[user] = {}
 
-        var i=0;
-        var created = false;
-        while (!created && i < 10) {
-            if (players[i]["life"] == 0) {
-                players[i] = {x:start_x, y:start_y, nick:nick, bot:false, life:3, items:0};
-                created = true;
-            }
-            i++;
-        }
-        if (!created) {
-           i = 0;
-        }
-        while (!created && i < 10) {
-
-            if (players[i]["bot"] == true) {
-                players[i] = {x:start_x, y:start_y, nick:nick, bot:false, life:3, items:0};
-                created = true;
-            }
-            i++;
-        }
-        
-        if (created) {
-
-            users[user] = i - 1;
-            var payload = new Object();
-            payload["status"] = "registration";
-            payload["nick"] = nick;
-            console.log("registration: #" + (i-1) + " " + nick + " (" + user + ")");
-            ws.send(JSON.stringify(payload));
-        }
+        let payload = new Object()
+        payload["status"] = "registered"
+        console.log("registration: #" + " (" + user + ")")
+        ws.send(JSON.stringify(payload))
     }
 
     ws.on('message', function(message) {       
-        var incomingMsg = JSON.parse(message);
+        let incomingMsg = JSON.parse(message);
         if (user in users) {
             
-            players[users[user]].action = incomingMsg.action;
-            console.log("action from #" + users[user] + " " + players[users[user]].nick + ": " + incomingMsg.action);
+            //players[users[user]].action = incomingMsg.action;
+            //console.log("action from #" + users[user] + " " + players[users[user]].nick + ": " + incomingMsg.action);
+            console.log("action from #" + users[user] + " (current nick: " + users[user].nick + ") " + ": " + incomingMsg.action + " [" + incomingMsg.nick + "]")
+            for ( a in incomingMsg) { console.log(a + ": " + incomingMsg[a])}
+
+            if (incomingMsg.action == "setNick") {
+                if (incomingMsg.nick == null || incomingMsg.nick == undefined || incomingMsg.nick == "" || incomingMsg["nick"] == undefined) {
+                    if (users[user] != undefined && (users[user].nick == null || users[user].nick == undefined || users[user].nick == "" || users[user]["nick"] == undefined)) {
+                        users[user].nick = "Dr. Rust"
+                    }
+                }
+                else {
+                    users[user].nick = incomingMsg.nick
+                }
+
+                console.log(user + " setNick to : " + users[user].nick)
+
+                let payload = new Object();
+                payload["status"] = "nickChanged";
+                payload["nick"] = users[user].nick
+                ws.send(JSON.stringify(payload));
+            }
+            else if (incomingMsg.action == "findGame") {
+                if (incomingMsg.gameType == "local") {
+                    let usersInGame = [2]
+                    usersInGame[0] = user
+                    usersInGame[1] = user
+                    startNewGame(ws, usersInGame, "local", 0)
+                }
+                // if another findGame, join and send Start
+                // type: local = just start immediately, assume client will send both p1 and p2 (>2?)
+                // ,ai,
+                // ,online
+                // also provide map (or random)
+
+            }
 
         }
         else {
-            console.log("action from unknown user (" + user + "): " + incomingMsg.action);
+            console.log("action from unknown user (" + user + "): " + incomingMsg.action)
         }
 
-//        console.log('connected: ' + ws.upgradeReq.headers['sec-websocket-key']);
         
         
     });
 });
 
 
-var manly_adjectives = ['Mighty', 'Powerful', 'Hairy', 'Macho', 'Slobbering', 'Grizzly', 'Menacing', 'Wild', 'Mute', 'Rabid',
-                        'Barbaric', 'Dirty', 'Dusty', 'Strong', 'Brave', 'Scarred', 'Monobrowy', 'Stenching', 'Brutish', 
-                        'Uncultured', 'Simple', 'Brutal', 'Untamed', 'Vicious', 'Vulgar', 'Coarse', 'Primitive'];
+function startNewGame(ws, users, gameType, mapNum) {
+    games[gameNumber] = {}
+    games[gameNumber]["gameNumber"] = gameNumber
+    games[gameNumber]["playerCount"] = users.length
+    games[gameNumber]["players"] = [users.length]
+    games[gameNumber]["nextPlayer"] = getRandomInt(1, users.length)
+    games[gameNumber]["mapNum"] = mapNum
 
-var barbarian = ['Barbarian', 'Man', 'Warrior', 'Fighter', 'Swordsman', 'Sumerian', 'Pitfighter', 'Gladiator', 'Wildman',
-                 'Brute', 'Savage', 'Hoplite', 'Primitive', 'Beastman', 'HalfOgre'];
+    console.log( users.length + " users : " + JSON.stringify(users) + " , " + gameType + ", map: " + mapNum)
 
-var barbarian_names = [ 'Thorstein', 'Hjalkar', 'Thargald', 'Skegg', 'Thorberg', 'Hauk', 'Jon',
-                        'Erlend', 'Anlaf', 'Asmund', 'Ingmar', 'Einer', 'Ingimar', 'Gunnvid', 'Vegeir', 'Thorgil',
-                        'Hrein', 'Glam', 'Ragnar', 'Eifind', 'Ulf', 'Olav', 'Karstein', 'Bror', 'Gauk', 'Rogne',
-                        'Stein', 'Tor', 'Tyrkir', 'Thorlak', 'Snorre', 'Oddvar', 'Eydis', 'Geitir', 'Steinar', 'Runolf',
-                        'Galter', 'Skidi', 'Hroar', 'Bolverk', 'Sveni', 'Hrasvelg', 'Arin', 'Bjorn', 'Hafr', 'Ofieg', 'Sigve',
-                        'Tyrfing', 'Alvi', 'Alver', 'Ridan', 'Thang', 'Cromm', 'Guth', 'Kahvor', 'Crat', 'Nath', 'Thang',
-                        'Theod', 'Olaf', 'Gorg', 'Ratdrud', 'Thokgrand', 'Forgrad', 'Barax', 'Kahtarg', 'Grat', 'Grimm',
-                        'Fledrid', 'Vorthak', 'Wulf', 'Rancuth', 'Theon', 'Vor', 'Ra', 'Winhall', 'Thok', 'Odin', 'Glor', 'Wutan',
-                        'Nanlof', 'Wirak', 'Balder', 'Chop', 'Ferth', 'Bard', 'Valan', 'Theonhor', 'Rorran', 'Ulv', 'Rein',
-                        'Eivind', 'Ax', 'Einar', 'Huwaru', 'Dragrand', 'Ratrar', 'Targwyn', 'Slaugmak', 'Mandne', 'Krummof', 
-                        'Feum', 'Possom', 'Kahuca', 'Brytswith', 'Wiggrund', 'Varakrom', 'Anka', 'Withegrad', 'Mornvor', 'Clovic',
-                        'Hallaf', 'Warkrum', 'Gunnar', 'Skullrar', 'Slaugdr', 'Karis', 'Cromty', 'Niran', 'Huthok', 'Slaugax', 
-                        'Grok', 'Utarg', 'Wigtarg', 'Brink', 'Theanvor', 'Warugar', 'Keleto', 'Beorn', 'Stelne', 'Anhelm', 'Togra',
-                        'Krolmwig', 'Sirmak', 'Thokstan', 'Ethelan', 'Ivar', 'Hallfrey', 'Sede', 'Hugrim', 'Cromand', 'Alaric',
-                        'Tharghor', 'Gradgund', 'Stanconn', 'Thunkromm', 'Brytmand', 'Oystein', 'Wulfthak', 'Brakca', 'Sigtrygg', 
-                        'Grunceol', 'Hukrom', 'Hudryt', 'Wenra', 'Bianca', 'Todrud', 'Narghal', 'Carsten', 'Thanbeo', 'Caror',
-                        'Gundval', 'Rico', 'Crommethel', 'Kah', 'Ancromm', 'Bombaata', 'Huhil', 'Horanvor', 'Drytra', 'Rakceol',
-                        'Carorhall', 'Grimhes', 'Uhall', 'Escwulf', 'Etheldel', 'Takhesgund', 'Eadwyn', 'Grim', "Brynjar",
-                        'Reya', 'Stantheod', 'Krolm', 'Thorgrim', 'Nargthryth', 'Riri', 'Grandslaug', 'Waldhor', 'Garmak',
-                        'Tharg', 'Vawulf', 'Kull', 'Thek', 'Morn', 'Freawaru', 'Ricae', 'Brytnarg', 'Krolm', 'Kele', 'Thang',
-                        'Gundahar', 'Orat', 'Ethelnan', 'Reyafi', 'Utarg', 'Conan', 'Brakdyr', 'Anvorred', 'Croea', 'Helm', 'Harald'];
-
-var currentName = 0;
-
-var fs = require('fs');
-
-var arg = process.argv[2];
-console.log("arg is " + arg);
-
-var allNicks = {};
-
-function generateNick(userhash) {
-    var tmp = barbarian_names[currentName];
-    currentName++; 
-    if (currentName >= barbarian_names.length) {
-        currentName = 0;
+    for (let x=0; x<users.length; x++) {
+        games[gameNumber]["players"][x] = {}
+        games[gameNumber]["players"][x]["user"] = users[x]
+        games[gameNumber]["players"][x]["parts"] = 0
+        if (users[x] != games[gameNumber]["nextPlayer"]) {
+            games[gameNumber]["players"][x]["parts"] = 50
+        }
+        
     }
-    fs.appendFile('ld37-nicks.txt', userhash + ':' + tmp + ":" + getDateTime() + "\n", function (err) {
 
-    });
-    return tmp;
+/*    game[gameNumber]["player1"] = user[0]
+    if (users.length > 1) {
+        game[gameNumber]["player2"] = user[1]
+    }
+    if (users.length > 2) {
+        game[gameNumber]["player3"] = user[2]
+    }
+    if (users.length > 3) {
+        game[gameNumber]["player4"] = user[3]
+    }
+    */
+    games[gameNumber]["gameType"] = gameType
+    games[gameNumber]["turn"] = 0
+    games[gameNumber]["map"] = map[0]["map"]
+    games[gameNumber]["robots"] = map[0]["robots"]
+    games[gameNumber]["onGoing"] = true
+console.log( games[gameNumber]["robots"])
+    
+
+    let sentUsers = {}
+    for (user in users) {
+        let payload = new Object();
+        payload["status"] = "gameStarted"
+        payload["robots"] = games[gameNumber]["robots"]
+        if (sentUsers[users[user]] != undefined) {
+        }
+        else {
+            ws.send(JSON.stringify(payload))
+            sentUsers[users[user]] = true
+            console.log( "sending gameStarted to " + users[user] + " robots: " + payload["robots"])
+            console.log(JSON.stringify(sentUsers))
+        }
+
+    }
+
+
+    gameNumber++
+
 }
 
+let fs = require('fs')
+
+let arg = process.argv[2]
 
 function getDateTime() {
 
-    var date = new Date();
+    let date = new Date();
 
-    var hour = date.getHours();
+    let hour = date.getHours();
     hour = (hour < 10 ? "0" : "") + hour;
 
-    var min  = date.getMinutes();
+    let min  = date.getMinutes();
     min = (min < 10 ? "0" : "") + min;
 
-    var sec  = date.getSeconds();
+    let sec  = date.getSeconds();
     sec = (sec < 10 ? "0" : "") + sec;
 
-    var year = date.getFullYear();
+    let year = date.getFullYear();
 
-    var month = date.getMonth() + 1;
+    let month = date.getMonth() + 1;
     month = (month < 10 ? "0" : "") + month;
 
-    var day  = date.getDate();
+    let day  = date.getDate();
     day = (day < 10 ? "0" : "") + day;
 
     return year + "/" + month + "/" + day + " " + hour + ":" + min + ":" + sec;
 
 }
 
-var run = true;
-var turn = 0;
-var last_walkable_tile = 80;
-var last_lava_tile = 34;
-
-function calculateAndSetItems(i) {
-    console.log("calculating");
-    var score = 0;
-    for (item in items) {
-        if (item <= 10 && items[item].owner == players[i].nick) {
-            console.log("adding item# " + item + " for " + (Math.pow(2, (parseInt(item))).toString()));
-            score += Math.pow(2, parseInt(item));
-        }
-    }
-    players[i].items = score;
-}
 
 function attack(player) {
 
@@ -402,61 +458,6 @@ function attack(player) {
         }
     }
 }
-
-// the player who died and the action of either the attacker or himself
-function dropItems(player, action, exit) {
-    var x = player.x;
-    var y = player.y;
-    var resetItems = false;
-
-    if (exit || (map[y][x] <= last_walkable_tile && map[y][x] > last_lava_tile || map[y][x] == 0)) {
-
-    }
-    else {
-        if (action == "left" && ((map[y][x+1] <= last_walkable_tile && map[y][x+1] > last_lava_tile) || map[y][x+1] == 0)) {
-            x += 1;
-        }
-        else if (action == "right" && ((map[y][x-1] <= last_walkable_tile && map[y][x-1] > last_lava_tile) || map[y][x-1] == 0)) {
-            x -= 1;
-        }
-        else if (action == "up" && ((map[y+1][x] <= last_walkable_tile && map[y+1][x] > last_lava_tile) || map[y+1][x] == 0)) {
-            y += 1;
-        }
-        else if (action == "down" && ((map[y-1][x] <= last_walkable_tile && map[y-1][x] > last_lava_tile) || map[y-1][x] == 0)) {
-            y -= 1;
-        }
-        else {
-            if (((map[y][x+1] <= last_walkable_tile && map[y][x+1] > last_lava_tile) || map[y][x+1] == 0)) {
-                x += 1;
-            }
-            else if (((map[y][x-1] <= last_walkable_tile && map[y][x-1] > last_lava_tile) || map[y][x-1] == 0)) {
-                x -= 1;
-            }
-            else if (((map[y+1][x] <= last_walkable_tile && map[y+1][x] > last_lava_tile) || map[y+1][x] == 0)) {
-                y += 1;
-            }
-            else if (((map[y-1][x] <= last_walkable_tile && map[y-1][x] > last_lava_tile) || map[y-1][x] == 0)) {
-                y -= 1;
-            }
-            else {
-                resetItems = true;
-            }
-
-        }
-    }
-
-    for (item in items) {
-        if (items[item].owner == player.nick) {
-            items[item].owner = "";
-            items[item].x = x;
-            items[item].y = y;
-            if (resetItems || exit) {
-                items[item].dead = true;
-            }
-        }
-    }
-
-}
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -475,46 +476,14 @@ function distanceBetweenTwoPoints(a, b) {
     return Math.sqrt(xs + ys);
 }
 
-function notDuplicate(player, item) {
-    if (item.type == "armour1" || item.type == "armour2") {
-        if (items[8].owner == player.nick || items[9].owner == player.nick) {
-            return false;
-        }
-    }
-    if (item.type == "helm1" || item.type == "helm2" || item.type == "helm3" ) {
-        if (items[1].owner == player.nick || items[2].owner == player.nick || items[3].owner == player.nick) {
-            return false;
-        }
-    }
-    if (item.type == "shield1" || item.type == "shield2" || item.type == "shield3" || item.type == "shield4" ) {
-        if (items[4].owner == player.nick || items[5].owner == player.nick ||
-            items[6].owner == player.nick || items[7].owner == player.nick) {
-            return false;
-        }
-    }
-    return true;
-}
-/*
-items.push({type:"amulet",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"helm1",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"helm2",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"helm3",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"shield1",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"shield2",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"shield3",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"shield4",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"armour1",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"armour2",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"sword",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"pineapple",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"potion1",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"potion2",x:-10,y:-10, owner:"", dead:false});
-items.push({type:"potion3",x:-10,y:-10, owner:"", dead:false});
-*/
 function process_and_send_events() {
     turn++;
-    console.log("Turn " + turn);
-
+    //console.log("Turn " + turn);
+    for (let i=earliestOnGoingGame; i<gameNumber; i++) {
+        if (games[i]["onGoing"] != undefined && games[i]["onGoing"] == true) {
+            console.log("active game: " + games[i]["gameNumber"])
+        }
+    }
     for(var i = 0; i < players.length; i++) {
 
         if (players[i].bot == true) {
@@ -659,7 +628,7 @@ function process_and_send_events() {
 
     var payload = {};
     payload["players"] = players;
-    payload["items"] = items;
+//    payload["items"] = items;
     for(var i in wss.clients) {
         wss.clients[i].send(JSON.stringify(payload));
     }
